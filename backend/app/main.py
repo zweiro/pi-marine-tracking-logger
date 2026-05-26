@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 from app.database import Database
-from app.routers import turtles_router, dives_router, samples_router
+from app.routers import turtles_router, dives_router, samples_router, export_router
 from app.services.scheduler import PollingScheduler
 
 # Configure logging
@@ -98,6 +98,10 @@ def create_application() -> FastAPI:
                 "name": "Sync",
                 "description": "Satellite data synchronization and scheduler management.",
             },
+            {
+                "name": "export",
+                "description": "Data export in Darwin Core Archive format for EMODnet/EurOBIS submission.",
+            },
         ],
         docs_url="/docs",
         redoc_url="/redoc",
@@ -125,6 +129,7 @@ def create_application() -> FastAPI:
     app.include_router(turtles_router, prefix=settings.api_prefix)
     app.include_router(dives_router, prefix=settings.api_prefix)
     app.include_router(samples_router, prefix=settings.api_prefix)
+    app.include_router(export_router, prefix=settings.api_prefix)
 
     return app
 

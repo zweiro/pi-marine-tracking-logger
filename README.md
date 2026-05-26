@@ -10,4 +10,4 @@ This project is an academic project with the purpose to monitor sea turtle movem
 - Robin Zweifel - robin.zweifel@heig-vd.ch
 
 ## WIP Tasks
-Please refer to the [TODO.md](TODO.md) file for a detailed list of tasks and
+Please refer to the [TODO.md](TODO.md) file for a detailed list of tasks

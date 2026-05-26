@@ -76,6 +76,27 @@ services:
       start_period: 10s
     restart: unless-stopped
 
+  # Vue.js Frontend (with hot-reload for development)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: turtle-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source for hot-reload (exclude node_modules)
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+    environment:
+      - VITE_API_URL=/api/v1
+    depends_on:
+      - backend
+    networks:
+      - turtle-network
+    restart: unless-stopped
+
 networks:
   turtle-network:
     driver: bridge
