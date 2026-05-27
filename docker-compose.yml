@@ -33,7 +33,7 @@ services:
     environment:
       - AUTO_GENERATE_ENABLED=true
       - AUTO_GENERATE_INTERVAL_SECONDS=60
-      - TURTLE_IDS=TRT-2024-001,TRT-2024-002,TRT-2024-003
+      - TURTLE_IDS=HONU-001,CARI-002,MEDI-003
     networks:
       - turtle-network
     healthcheck:
@@ -58,8 +58,8 @@ services:
       - DEBUG=false
       - CORS_ORIGINS=["http://localhost:3000","http://localhost:5173"]
       # Satellite polling configuration
-      - SATELLITE_POLLING_ENABLED=false
-      - SATELLITE_POLLING_INTERVAL_SECONDS=60
+      - SATELLITE_POLLING_ENABLED=true
+      - SATELLITE_POLLING_INTERVAL_SECONDS=30
       - SATELLITE_API_URL=http://mock-satellite:8001
     depends_on:
       mongodb:
