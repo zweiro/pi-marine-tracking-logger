@@ -15,6 +15,15 @@ from app.services.packet_decoder import PacketDecoder
 
 logger = logging.getLogger(__name__)
 
+# Turtle profile mapping for auto-creation
+TURTLE_PROFILES = {
+    "HONU": {"name": "Honu", "species": "green"},
+    "CARI": {"name": "Caribe", "species": "hawksbill"},
+    "MEDI": {"name": "Mediterraneo", "species": "loggerhead"},
+    "GALA": {"name": "Darwin", "species": "green"},
+    "AUST": {"name": "Coral", "species": "flatback"},
+}
+
 
 class SatelliteFetcher:
     """
@@ -82,7 +91,7 @@ class SatelliteFetcher:
 
     async def ensure_turtle_exists(self, turtle_id: str) -> bool:
         """
-        Check if turtle exists, create placeholder if not.
+        Check if turtle exists, create with profile data if not.
 
         Returns True if turtle exists or was created.
         """
@@ -90,12 +99,15 @@ class SatelliteFetcher:
         if turtle:
             return True
 
-        # Create placeholder turtle with valid species
-        logger.info(f"Creating placeholder turtle: {turtle_id}")
+        # Extract prefix to get profile (e.g., "HONU-001" -> "HONU")
+        prefix = turtle_id.split("-")[0] if "-" in turtle_id else turtle_id
+        profile = TURTLE_PROFILES.get(prefix, {"name": turtle_id, "species": "green"})
+
+        logger.info(f"Creating turtle: {turtle_id} ({profile['name']})")
         await self.db.turtles.insert_one({
             "turtle_id": turtle_id,
-            "name": f"Auto-created {turtle_id}",
-            "species": "green",  # Default to green turtle
+            "name": profile["name"],
+            "species": profile["species"],
             "status": "active",
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow(),

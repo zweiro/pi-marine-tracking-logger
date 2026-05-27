@@ -15,12 +15,15 @@ from fastapi import FastAPI, Query, BackgroundTasks
 from pydantic import BaseModel
 import asyncio
 
-from packet_generator import generate_packet_hex
+from packet_generator import generate_packet_hex, TURTLE_PROFILES
 
 # Configuration from environment
 AUTO_GENERATE_ENABLED = os.getenv("AUTO_GENERATE_ENABLED", "true").lower() == "true"
 AUTO_GENERATE_INTERVAL_SECONDS = int(os.getenv("AUTO_GENERATE_INTERVAL_SECONDS", "60"))
-TURTLE_IDS = os.getenv("TURTLE_IDS", "TRT-2024-001,TRT-2024-002").split(",")
+
+# Default turtle IDs from profiles (can be overridden via env)
+DEFAULT_TURTLE_IDS = list(TURTLE_PROFILES.keys())[:3]  # Use first 3 turtles by default
+TURTLE_IDS = os.getenv("TURTLE_IDS", ",".join(DEFAULT_TURTLE_IDS)).split(",")
 
 # In-memory packet store
 packets_store: list[dict] = []
@@ -50,17 +53,13 @@ async def auto_generate_packets():
     while True:
         await asyncio.sleep(AUTO_GENERATE_INTERVAL_SECONDS)
 
-        # Generate a packet for a random turtle
+        # Generate a packet for a random turtle using profile-based config
         turtle_id = random.choice(TURTLE_IDS)
         dive_counters[turtle_id] += 1
 
         packet = generate_packet_hex(
             turtle_id=turtle_id,
             dive_id=dive_counters[turtle_id],
-            sample_count=random.randint(300, 600),
-            max_depth_m=random.uniform(20, 80),
-            surface_temp_c=random.uniform(20, 26),
-            deep_temp_c=random.uniform(12, 18),
         )
 
         packets_store.append(packet)
@@ -161,14 +160,11 @@ async def generate_packet(
     turtle_id: Annotated[
         str,
         Query(description="Turtle ID for the packet"),
-    ] = "TRT-2024-001",
-    sample_count: Annotated[
-        int,
-        Query(ge=10, le=1000, description="Number of samples"),
-    ] = 600,
+    ] = "HONU-001",
 ) -> dict:
     """
     Manually generate a new packet for testing.
+    Uses turtle profile for realistic dive parameters.
     """
     if turtle_id not in dive_counters:
         dive_counters[turtle_id] = 0
@@ -178,7 +174,6 @@ async def generate_packet(
     packet = generate_packet_hex(
         turtle_id=turtle_id,
         dive_id=dive_counters[turtle_id],
-        sample_count=sample_count,
     )
 
     packets_store.append(packet)
