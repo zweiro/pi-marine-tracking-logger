@@ -35,13 +35,13 @@ export type TurtleStatus = 'active' | 'inactive' | 'lost'
  * Dive model
  */
 export interface Dive {
-  _id: string
+  id: string
   turtle_id: string
-  dive_number: number
+  dive_id: number
   start_time: string
   start_location: GeoJSONPoint
   stats: DiveStats
-  packet_metadata: PacketMetadata
+  packet_metadata?: PacketMetadata
 }
 
 export interface GeoJSONPoint {
@@ -52,9 +52,10 @@ export interface GeoJSONPoint {
 export interface DiveStats {
   sample_count: number
   max_depth_m: number
-  mean_temp_c?: number
-  min_temp_c?: number
-  max_temp_c?: number
+  avg_depth_m?: number
+  avg_temperature_c?: number
+  min_temperature_c?: number
+  max_temperature_c?: number
 }
 
 export interface PacketMetadata {

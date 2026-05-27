@@ -1,16 +1,31 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useTurtlesStore } from '@/stores/turtles'
 import { useDivesStore } from '@/stores/dives'
 import TurtleCard from '@/components/TurtleCard.vue'
 import TurtleMap from '@/components/TurtleMap.vue'
+import DiveCharts from '@/components/DiveCharts.vue'
 
 const turtlesStore = useTurtlesStore()
 const divesStore = useDivesStore()
 
-onMounted(() => {
+let refreshInterval: ReturnType<typeof setInterval> | null = null
+
+function refreshData() {
   turtlesStore.fetchTurtles()
   divesStore.fetchAllDives()
+}
+
+onMounted(() => {
+  refreshData()
+  // Auto-refresh every 30 seconds
+  refreshInterval = setInterval(refreshData, 30000)
+})
+
+onUnmounted(() => {
+  if (refreshInterval) {
+    clearInterval(refreshInterval)
+  }
 })
 </script>
 
@@ -80,6 +95,9 @@ onMounted(() => {
         />
       </div>
     </div>
+
+    <!-- Charts -->
+    <DiveCharts :dives="divesStore.dives" />
   </div>
 </template>
 
