@@ -15,7 +15,7 @@ const authors = [
     </header>
 
     <section class="section">
-      <h2 class="section-title">An HES-SO master academical project</h2>
+      <h2 class="section-title">An HES-SO and University of Bern/BFH master academical project</h2>
       <p class="section-content">
         This platform was created as part of the PI MONIT project of the HES-SO Master.
         This aims to present the data collected by a marine animal monitoring device.
