@@ -357,7 +357,7 @@ class ExportRequest(BaseModel):
                 "end_date": "2024-12-31T23:59:59Z",
                 "include_samples": True,
                 "dataset_name": "Sea Turtle Tracking Project",
-                "institution_code": "HEIG-VD",
+                "institution_code": "HES-SO and University of Bern/BFH master",
             }
         }
     )

@@ -22,7 +22,7 @@ async function downloadDarwinCore() {
   try {
     const blob = await exportApi.downloadDarwinCoreZip({
       dataset_name: 'OceanPulse Sea Turtle Tracking',
-      institution_code: 'HEIG-VD',
+      institution_code: 'HES-SO and University of Bern/BFH master',
       include_samples: false
     })
 
